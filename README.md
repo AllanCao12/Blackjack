@@ -1,3 +1,3 @@
 # Blackjack
 
-# Creators: Alex De Meo, Alan Cao, Yufeng
+# Creators: Alex De Meo, Alan Cao, Yufeng Liu
