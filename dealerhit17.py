@@ -1,7 +1,7 @@
 # This is the dealer ruleset for hitting on soft 17
 # The dealer's move is determined by the sum of their hand
 # We don't worry about 1 2 or 3 because they won't occur as they all deal with aces, which will take on the 11 value with a 2 or an ace
-dealerstand17 = {
+dealerhit17 = {
     "21": "stand",
     "20": "stand",
     "20s": "stand",
