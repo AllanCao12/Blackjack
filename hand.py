@@ -10,8 +10,31 @@ class Hand:
     def add(self, card: Card):
         self.cards.append(card)
 
+    def getUpCard(self) -> Card:
+        return self.cards[1]
+
     def copy(self):
         return Hand(self.cards)
+    
+    # converts current hand to usable input for basic strategy dictionary
+    # returns int if hard total. returns str if pair or soft 
+    def getHand(self):
+        # if we're on first 2 cards
+        if len(self.cards) == 2:
+            # pair
+            if self.cards[0].rank == self.cards[1].rank:
+                if self.cards[0].rank == 1:
+                    return "AA"
+                elif self.cards[0].rank == 10:
+                    return "TT"
+                else:
+                    return f"{self.cards[0].rank}{self.cards[0].rank}"
+            # soft total
+            elif self.cards[0].rank == 1 or self.cards[1].rank == 1:
+                total = self.value()
+                return f"{total}s" 
+        # hard total
+        return self.value()
     
     def value(self) -> int:
         ace_num = 0

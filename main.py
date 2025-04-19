@@ -3,6 +3,10 @@ import dealerhit17
 import basic_strategy
 import dealerstand17
 from hand import Hand
+import sys
+
+sys.setrecursionlimit(500000)
+
 def main():
     # Making the objects for the house rules and player strategies 
     dealer_hit_soft_17 = dealerhit17.dealerhit17.copy()
@@ -66,6 +70,9 @@ def getHouseEdge(strategy, dealer_strategy):
         deck.cardsLeft += 1
     return totalEV
 
+def determineAction(player_hand: Hand, dealer_upcard: Card, strategy) -> int:
+    return strategy[player_hand.getHand()][dealer_upcard.rank]
+    
 def calculateEV(player_hand: Hand, dealer_hand: Hand, deck: Deck, currentProb: float, strategy, dealer_strategy) -> float:
     #currentProb is the probability we are in the current state we are in
 
@@ -81,7 +88,7 @@ def calculateEV(player_hand: Hand, dealer_hand: Hand, deck: Deck, currentProb: f
     if player_hand.is_bust() or dealer_hand.is_BJ():
         return (-1 * currentProb)
 
-    action = determineAction(player_hand, dealer_hand) # Determine if we're hitting, standing, splitting, or doubling. Basic Strat
+    action = determineAction(player_hand, dealer_hand.getUpCard(), strategy) # Determine if we're hitting, standing, splitting, or doubling. Basic Strat
 
     stateEV = 0 # We will we adding up all the EVs from the various substates into this value
 
@@ -139,9 +146,6 @@ def dealer_draw(dealer_hand, player_hand, currentProb, deck):
             deck.cardsLeft += 1
     # For those cases that haven't returned yet, return the total EV of all substates
     return EV
-
-
-            
 
 if __name__ == "__main__":
     main()
