@@ -1,8 +1,8 @@
-import deck
+from deck import Deck
 import dealerhit17
 import basic_strategy
 import dealerstand17
-
+from hand import Hand
 def main():
     # Making the objects for the house rules and player strategies 
     dealer_hit_soft_17 = dealerhit17.dealerhit17.copy()
@@ -35,6 +35,54 @@ def main():
     print(house_edge)
 
 
+def getHouseEdge(strategy, dealer_strategy):
+    totalEV = 0
+    deck = Deck()
+    probability = 1
+    for pcard1 in deck._initialDeck:
+        probability = probability * (deck.getCard(dcard1) / deck.numCardsLeft()) # should just be 1/13
+        deck.removeCard(pcard1)
+        for dcard1 in deck._initialDeck:
+            probability = probability * (deck.getCard(dcard1) / deck.numCardsLeft())
+            deck.removeCard(dcard1)
+            for pcard2 in deck._initialDeck:
+                probability = probability * (deck.getCard(dcard1) / deck.numCardsLeft())
+                deck.removeCard(pcard2)
+                for dcard2 in deck._initialDeck:
+                    probability = probability * (deck.getCard(dcard1) / deck.numCardsLeft())
+                    deck.removeCard(dcard2)
 
+                    player_hand = Hand([pcard1, pcard2])
+                    dealer_hand = Hand([dcard1, dcard2])
+
+                    totalEV += calculateEV(player_hand, dealer_hand, deck, probability, strategy, dealer_strategy)
+    return totalEV
+
+def calculateEV(player_hand: Hand, dealer_hand: Hand, deck: Deck, currentProb: float, strategy, dealer_strategy) -> float:
+    #currentProb is the probability we are in the current state we are in
+
+    # Hitting, Splitting are our Recursive cases
+    # Blackjack, busting standing are our base cases. Doubling is just kinda there
+    
+    if player_hand.is_BJ:
+        if not dealer_hand.is_BJ:
+            return (1.5 * currentProb) # We are assuming blackjack pays 3:2
+        else: # dealer has a BJ
+            return 0
+    
+    if player_hand.is_bust:
+        return (-1 * currentProb)
+    
+    action = determineAction(player_hand, dealer_hand) # Determine if we're hitting, standing, splitting, or doubling. Basic Strat
+
+    stateEV = 0 # We will we adding up all the EVs from the various substates into this value
+
+    if action == 1: # Hitting
+        for card in deck._initialDeck:
+            if deck.getCard(card) > 0:
+                currentProb = currentProb * (deck.getCard(card) / deck.numCardsLeft())
+                player_hand.add(card)
+                deck.removeCard(card)
+            stateEV += calculateEV(player_hand, dealer_hand, deck, currentProb, strategy, dealer_strategy) 
 if __name__ == "__main__":
     main()
