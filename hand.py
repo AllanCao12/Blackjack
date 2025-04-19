@@ -11,7 +11,7 @@ class Hand:
         self.cards.append(card)
 
     def getUpCard(self) -> Card:
-        return self.cards[1]
+        return self.cards[0]
 
     def copy(self):
         return Hand(self.cards)
@@ -22,7 +22,7 @@ class Hand:
         # if we're on first 2 cards
         if len(self.cards) == 2:
             # pair
-            if self.cards[0].rank == self.cards[1].rank:
+            if self.can_split():
                 if self.cards[0].rank == 1:
                     return "AA"
                 elif self.cards[0].rank == 10:
@@ -50,6 +50,10 @@ class Hand:
             total += 10
 
         return total
+    
+    def is_soft(self) -> bool:
+        total = sum(card.rank for card in self.cards)   # Aces counted as 1
+        return any(card.rank == 1 for card in self.cards) and self.value() == total + 10
     
     def is_BJ(self) -> bool:
         if len(self.cards) == 2 and self.value() == 21:
