@@ -21,7 +21,6 @@ def main():
     ############################################################
     print("The anaylsis of basic strategy when dealer stands on every 17 resulted in: \n")
     print("House Edge: ", end='\r')
-    # getHouseEdge() runs the state machine with the given house ruleset and player strategy and returns the resulting house edge
     stand_house_edge = getHouseEdge(basic_strategy_s_s17, "s_s17")
     print(stand_house_edge)
 
@@ -30,13 +29,14 @@ def main():
     # This is the analysis for: dealer hits on soft 17 vs basic strategy
     #
     ############################################################
-    print("The anaylsis of basic strategy when dealer hits on soft 17 resulted in: \n")
-    print("House Edge: ", end='\r')
-    # getHouseEdge() runs the state machine with the given house ruleset and player strategy and returns the resulting house edge
-    hit_house_edge = getHouseEdge(basic_strategy_h_s17, "h_s17")
-    print(hit_house_edge)
+    # print("The anaylsis of basic strategy when dealer hits on soft 17 resulted in: \n")
+    # print("House Edge: ", end='\r')
+    # hit_house_edge = getHouseEdge(basic_strategy_h_s17, "h_s17")
+    # print(hit_house_edge)
+    
+    hit_house_edge = 0
 
-    print(f"The house edges we found are: when the dealer stands on s17 is {stand_house_edge}, and when they hit, it's {hit_house_edge}")
+    print(f"The house edges we found are: when the dealer stands on s17 is {stand_house_edge * 100:.7f}%, and when they hit, it's {hit_house_edge}")
 
 
 def getHouseEdge(strategy, dealer_strategy):
@@ -129,10 +129,9 @@ def calculateEV(player_hand: Hand, dealer_hand: Hand, deck: Deck, currentProb: f
             deck._initialDeck[rank] += 1
             deck.cardsLeft        += 1
     elif action == 4: # Splitting
-        # with open("test.txt", "a") as f:
-        #     f.write("splitting\n")
         stateEV += calculateEV(Hand([player_hand.cards[0]]), dealer_hand, deck, currentProb, strategy, dealer_strategy) # can do this cause when you split you will only ever have 2 cards
         stateEV += calculateEV(Hand([player_hand.cards[1]]), dealer_hand, deck, currentProb, strategy, dealer_strategy)
+        
     else: # should never get to here
         print("ERROR IN DETERMINE_ACTION")
 
@@ -143,37 +142,45 @@ def dealer_draw(dealer_hand: Hand, player_hand: Hand, currentProb, deck, dealer_
     EV = 0
     if dealer_strategy == "s_s17":
         must_stand = dealer_hand.value() >= 17
-    else:                                         # h_s17
+    else: 
         val = dealer_hand.value()
         soft = dealer_hand.is_soft()
-        must_stand = (val > 17) or (val == 17 and not soft) 
+        must_stand = (val > 17) or (val == 17 and not soft)
 
     if must_stand:
-        if dealer_hand.value() > player_hand.value():
-            return (-1 * currentProb)
-        elif dealer_hand.value() == player_hand.value(): # Push
-            return 0
-        else: # Player won
+        dealer_val = dealer_hand.value()
+        player_val = player_hand.value()
+        # Check player bust just in case, although should be caught earlier
+        if player_hand.is_bust():
+             return (-1 * currentProb)
+        elif dealer_hand.is_bust(): # Dealer bust is win for player
             return (1 * currentProb)
-        
+        elif dealer_val > player_val: # Dealer wins
+            return (-1 * currentProb)
+        elif dealer_val == player_val: # Push
+            return 0
+        else: # Player wins
+            return (1 * currentProb)
+
+    # --- Recursive Case: Dealer Hits ---
+    # Iterate through all possible cards the dealer can draw next
     for rank in list(deck._initialDeck.keys()):
         if deck.getCard(rank) > 0:
-            newProb = currentProb * (deck.getCard(rank) / deck.numCardsLeft())
+            drawProb = deck.getCard(rank) / deck.numCardsLeft()
+            newProb = currentProb * drawProb 
+
             new_dealer_hand = Hand(dealer_hand.cards + [Card(rank)])
 
             deck.removeCard(rank)
 
             if new_dealer_hand.is_bust():
-                deck._initialDeck[rank] += 1
-                deck.cardsLeft += 1
-                return (1 * newProb)
-            # We've drawn a card and the dealer didn't bust. Time to recursive call and find out if we won or keep hitting
-                    
-            EV += dealer_draw(new_dealer_hand, player_hand, newProb, deck, dealer_strategy)
+                EV += (1 * newProb) # Accumulate the EV contribution of this busting path
+            else:
+                # Dealer didn't bust, continue drawing recursively
+                EV += dealer_draw(new_dealer_hand, player_hand, newProb, deck, dealer_strategy)
 
             deck._initialDeck[rank] += 1
             deck.cardsLeft += 1
-    # For those cases that haven't returned yet, return the total EV of all substates
     return EV
 
 if __name__ == "__main__":
