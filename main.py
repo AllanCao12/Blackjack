@@ -1,7 +1,5 @@
 from deck import Deck, Card
-import dealerhit17
 import basic_strategy
-import dealerstand17
 from hand import Hand
 import sys
 
@@ -10,7 +8,6 @@ sys.setrecursionlimit(50000)
 def main():
     # Making the objects for the house rules and player strategies 
     basic_strategy_s_s17 = basic_strategy.basic_strategy_s_s17.copy()
-    basic_strategy_h_s17 = basic_strategy.basic_strategy_h_s17.copy()
     print("Given the nature of this program, running it will take a bit of time")
 
 
@@ -24,19 +21,7 @@ def main():
     stand_house_edge = getHouseEdge(basic_strategy_s_s17, "s_s17")
     print(stand_house_edge)
 
-    ###############################################################
-    #
-    # This is the analysis for: dealer hits on soft 17 vs basic strategy
-    #
-    ############################################################
-    # print("The anaylsis of basic strategy when dealer hits on soft 17 resulted in: \n")
-    # print("House Edge: ", end='\r')
-    # hit_house_edge = getHouseEdge(basic_strategy_h_s17, "h_s17")
-    # print(hit_house_edge)
-    
-    hit_house_edge = 0
-
-    print(f"The house edges we found are: when the dealer stands on s17 is {stand_house_edge * 100:.7f}%, and when they hit, it's {hit_house_edge}")
+    print(f"The house edges we found are: when the dealer stands on s17 is {stand_house_edge * 100:.7f}%")
 
 
 def getHouseEdge(strategy, dealer_strategy):
