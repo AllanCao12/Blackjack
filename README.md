@@ -9,9 +9,13 @@ We loop through every possible player hand and dealer hand. With each possibilit
 
 # Rules
 Single Deck
+
 Blackjacks pay 3:2 
+
 No surrender or insurance
+
 Can double after splitting
+
 Stand on Soft 17
 
 # House Edge
