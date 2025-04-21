@@ -1,12 +1,21 @@
-# Blackjack
-Creators: Alex De Meo, Alan Cao, Yufeng Liu 101258905
+# Blackjack House Edge
+Creators: 
+- Alex De Meo
+- Alan Cao
+- Yufeng Liu, 101258905
+
+# Logic
+We loop through every possible player hand and dealer hand. With each possibility, we recursively calculate the expected value by following our strategy chart. The script takes roughly 30 minutes to run. 
+
+# House Edge
+We calculate the house edge to be around **0.59%**. Logically, this makes sense since the player has less variability when drawing cards, allowing them to play more precisely. The dealer still has the slight advantage, since it plays after the player. 
 
 # Rules
 ## Player's Actions
 1. Hit
 2. Stand
-3. Split
-4. Double
+3. Double
+4. Split
 
 ## Deal order: 
 1. Player's 1st card
@@ -15,5 +24,20 @@ Creators: Alex De Meo, Alan Cao, Yufeng Liu 101258905
 4. Dealer's up card
 
 ## Basic Strategy:
-![Strategy](assets/blackjack-basic-strategy-chart.jpg)
+![Strategy](assets/bj_1d_h17.gif)
 
+# File Structure
+```bash
+.
+├── README.md
+├── assets
+│   ├── bj_1d_h17.gif
+│   └── bj_1d_s17.gif
+├── basic_strategy.py
+├── cards.py 
+├── dealerhit17.py 
+├── dealerstand17.py
+├── deck.py
+├── hand.py
+└── main.py
+```
