@@ -36,7 +36,7 @@ This seems about right with online resources, they put the house edge at around 
 4. Dealer's up card
 
 ## Basic Strategy:
-![Strategy](assets/bj_1d_h17.gif)
+![Strategy](assets/bj_1d_s17.gif)
 
 # File Structure
 ```bash
