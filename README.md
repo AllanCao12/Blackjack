@@ -7,8 +7,20 @@ Creators:
 # Logic
 We loop through every possible player hand and dealer hand. With each possibility, we recursively calculate the expected value by following our strategy chart. The script takes roughly 30 minutes to run. 
 
+# Rules
+Single Deck
+
+Blackjacks pay 3:2 
+
+No surrender or insurance
+
+Can double after splitting
+
+Stand on Soft 17
+
 # House Edge
-We calculate the house edge to be around **0.59%**. Logically, this makes sense since the player has less variability when drawing cards, allowing them to play more precisely. The dealer still has the slight advantage, since it plays after the player. 
+We calculate the house edge to be around **0.59%**. Logically, this makes sense since the player has less variability when drawing cards, allowing them to play more precisely. The dealer still has the slight advantage, since it plays after the player so if the both the player and the dealer would've busted, the player loses.
+This seems about right with online resources, they put the house edge at around 0.5%. The possible variance could be because we are not playing with surrendering or insurance. 
 
 # Rules
 ## Player's Actions
@@ -24,7 +36,7 @@ We calculate the house edge to be around **0.59%**. Logically, this makes sense 
 4. Dealer's up card
 
 ## Basic Strategy:
-![Strategy](assets/bj_1d_h17.gif)
+![Strategy](assets/bj_1d_s17.gif)
 
 # File Structure
 ```bash
