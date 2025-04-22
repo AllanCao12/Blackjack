@@ -38,6 +38,12 @@ This seems about right with online resources, they put the house edge at around 
 ## Basic Strategy:
 ![Strategy](assets/bj_1d_s17.gif)
 
+# How to Run:
+
+cd into the folder where all the py files are. Then you can run "python3 main.py" assuming you have python installed
+
+If you want to run it in VS code instead you can just open the folder and click run when the file in front of you is main.py
+
 # File Structure
 ```bash
 .
